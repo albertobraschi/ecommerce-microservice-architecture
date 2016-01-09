@@ -1,0 +1,14 @@
+{
+    "name": "salvozappa/hamaca",
+    "description": "The next-gen e-commerce platform",
+    "require": {
+        "symfony/console": "^3.0",
+        "doctrine/orm": "^2.5",
+        "symfony/yaml": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hamaca\\": "src/Hamaca"
+        }
+    }
+}

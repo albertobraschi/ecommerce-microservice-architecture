@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/bootstrap-doctrine.php';
+
+use Hamaca\Command\ProductCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('Hamaca', '0.1');
+
+$productCommand = new ProductCommand();
+//$productCommand->setEntityManager($entityManager);
+
+$application->add($productCommand);
+
+$application->run();
