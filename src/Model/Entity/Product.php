@@ -1,13 +1,13 @@
 <?php
 
-namespace Hamaca\Model;
+namespace Hamaca\Model\Entity;
 
 /**
  * @Entity
  * @Table(name="product")
  * @InheritanceType("SINGLE_TABLE")
  */
-class Product extends HamacaModel
+class Product extends Entity
 {
 
     /**
@@ -15,10 +15,6 @@ class Product extends HamacaModel
      * @var int $id
      */
     private $id;
-
-    public function __construct()
-    {
-    }
 
     /**
      * @return int

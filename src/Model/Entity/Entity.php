@@ -1,15 +1,17 @@
 <?php
 
-namespace Hamaca\Model;
+namespace Hamaca\Model\Entity;
 use Doctrine\ORM\EntityManager;
 
-abstract class HamacaModel
+abstract class Entity
 {
 
-    /**
-     * @var EntityManager
-     */
     private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     public function setEntityManager(EntityManager $entityManager)
     {

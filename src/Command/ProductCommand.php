@@ -2,7 +2,7 @@
 
 namespace Hamaca\Command;
 
-use Hamaca\Model\Product;
+use Hamaca\Model\Entity\Product;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
