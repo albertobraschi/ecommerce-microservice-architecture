@@ -5,6 +5,7 @@
   "description": "Hamaca E-commerce catalog service",
   "author": "Salvo Zappalà <salvo.a.zappala@gmail.com>",
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "redis": "^2.4.2"
   }
 }
