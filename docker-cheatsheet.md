@@ -16,10 +16,7 @@ docker run --name dns \
     --domain hamaca.io
 
 ## catalog
-docker run --name catalog \
-    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
-    --dns-search hamaca.io \
-    -iP --rm salvozappa/nodejs
+docker build -t salvozappa/nodejs . && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP --rm salvozappa/nodejs
 
 ## catalog-data
 docker run --name catalog-data \
