@@ -1,0 +1,10 @@
+{
+  "name": "hamaca-catalog-service",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Hamaca E-commerce catalog service",
+  "author": "Salvo Zappalà <salvo.a.zappala@gmail.com>",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
