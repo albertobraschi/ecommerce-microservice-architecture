@@ -21,8 +21,9 @@ app.use(function (req, res, next) {
 
 // Routes
 var indexRoutes = require('./routes/index');
-// var productsRoutes = require('./routes/products');
+var productsRoutes = require('./routes/products');
 app.use('/', indexRoutes);
+app.use('/products', productsRoutes);
 
 // Start webserver
 app.listen(PORT);
