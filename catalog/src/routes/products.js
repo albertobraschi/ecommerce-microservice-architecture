@@ -19,10 +19,9 @@ router.post('/', function (req, res) {
   var redisClient = req.redisClient;
 
   var product = new Product(productData, redisClient);
-  product.save(function () {
-    res.sendStatus(201);
-    // TODO get data from redis
-    res.json(productData);
+  product.save(function (entityId) {
+    res.status(201);
+    res.json({id: entityId});
   });
 });
 

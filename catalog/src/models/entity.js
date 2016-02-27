@@ -17,7 +17,7 @@ Entity.prototype.save = function (callback) {
         var key = this.type + ':' + entityId;
         redisClient.hmset(key,
             this.data, function (err, res) {
-                callback(res);
+                callback(entityId);
             });
     });
 };
