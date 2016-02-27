@@ -17,18 +17,18 @@ docker run --name dns \
     --rm -v /var/run/docker.sock:/docker.sock \
     phensley/docker-dns \
     --domain hamaca.io
-
-## catalog
-docker build -t salvozappa/nodejs . && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP --rm salvozappa/nodejs
-
+    
 ## catalog-data
 docker run --name catalog-data \
     --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
     --dns-search hamaca.io \
     --rm redis
 
+## catalog
+docker build -t salvozappa/nodejs /Users/salvo/code/hamaca/catalog/src && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io    --rm -iP salvozappa/nodejs
+
 ## catalog-test
-docker build -t salvozappa/mocha . && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP --rm salvozappa/mocha
+docker build -t salvozappa/mocha /Users/salvo/code/hamaca/catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP salvozappa/mocha
 
 ## bash
 docker run -it --rm \
