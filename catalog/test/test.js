@@ -28,11 +28,8 @@ describe('hamaca catalog microservice', function () {
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(201);
-                id = res.body[0].id;
+                id = res.body.id;
                 expect(id).to.be.a('number');
-                for (var key in postData) {
-                    expect(res.body[0].key).to.eql(postData[key]);
-                }
                 done();
             });
     });
