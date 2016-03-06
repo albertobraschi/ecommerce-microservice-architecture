@@ -28,7 +28,7 @@ docker run --name catalog-data \
 docker build -t salvozappa/nodejs ./catalog/src && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io    --rm -iP salvozappa/nodejs
 
 ## catalog-test
-docker build -t salvozappa/mocha ./catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP salvozappa/mocha
+docker build -t salvozappa/mocha ./catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io  --rm   -iP salvozappa/mocha
 
 ## bash
 docker run -it --rm \
