@@ -27,4 +27,23 @@ Entity.prototype.save = function (callback) {
     });
 };
 
+Entity.prototype.load = function (callback) {
+    var type = this.type;
+    var data = this.data;
+    if (typeof type === 'undefined') {
+        throw "Invalid entity";
+    }
+    if (typeof data.id !== 'number') {
+        throw "Invalid id or id not set";
+    }
+    var redisClient = this.redisClient;
+    var key = type + ':' + this.data.id;
+    redisClient.hgetall(key, function (err, res) {
+        for (var key in res) {
+            data[key] = res[key];
+        }
+        callback();
+    });
+};
+
 module.exports = Entity;
