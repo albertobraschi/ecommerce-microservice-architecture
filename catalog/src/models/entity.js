@@ -7,16 +7,21 @@ var Entity = function (data, redisClient) {
 Entity.prototype.data = {};
 
 Entity.prototype.save = function (callback) {
-    if (this.type === null) {
+    var type = this.type;
+    var data = this.data;
+    if (typeof type === 'undefined') {
         throw "Invalid entity";
     }
-    var idCounter = 'next_' + this.type + '_id';
+    var idCounter = 'next_' + type + '_id';
     var redisClient = this.redisClient;
-    this.redisClient.incr(idCounter, function (err, reply) {
+    redisClient.incr(idCounter, function (err, reply) {
         var entityId = reply;
-        var key = this.type + ':' + entityId;
+        var key = type + ':' + entityId;
         redisClient.hmset(key,
-            this.data, function (err, res) {
+            data, function (err, res) {
+                if (err !== null) {
+                    throw err;
+                }
                 callback(entityId);
             });
     });
