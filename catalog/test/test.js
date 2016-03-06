@@ -37,7 +37,7 @@ describe('hamaca catalog microservice', function () {
 
     it('fetches a product', function (done) {
         superagent
-            .get(HOST + '/products')
+            .get(HOST + '/products/' + id)
             .query({
                 id: id
             })
