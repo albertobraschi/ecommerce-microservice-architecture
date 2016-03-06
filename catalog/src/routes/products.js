@@ -24,4 +24,20 @@ router.post('/', function (req, res) {
     });
 });
 
+/*
+ * Get a product
+ */
+router.get('/:id', function (req, res) {
+    var redisClient = req.redisClient;
+    var productId = parseInt(req.params['id']);
+    if (isNaN(productId)) {
+        throw 'Invalid id';
+    }
+    var product = new Product({id: productId}, redisClient);
+    product.load(function () {
+        res.status(200);
+        res.json(product.data);
+    });
+});
+
 module.exports = router;
