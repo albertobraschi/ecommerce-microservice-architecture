@@ -5,10 +5,10 @@ eval "$(docker-machine env default)"
 docker-machine rm default -y && docker-machine create --driver virtualbox default && eval "$(docker-machine env default)"
 
 # Build service node
-docker build -t salvozappa/nodejs .
+docker build -t salvozappa/nodejs ./catalog/src
 
 # Build test node
-docker build -t salvozappa/mocha .
+docker build -t salvozappa/mocha ./catalog/test
 
 # RUN
 
@@ -25,10 +25,10 @@ docker run --name catalog-data \
     --rm redis
 
 ## catalog
-docker build -t salvozappa/nodejs /Users/salvo/code/hamaca/catalog/src && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io    --rm -iP salvozappa/nodejs
+docker build -t salvozappa/nodejs ./catalog/src && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io    --rm -iP salvozappa/nodejs
 
 ## catalog-test
-docker build -t salvozappa/mocha /Users/salvo/code/hamaca/catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP salvozappa/mocha
+docker build -t salvozappa/mocha ./catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search hamaca.io     -iP salvozappa/mocha
 
 ## bash
 docker run -it --rm \
