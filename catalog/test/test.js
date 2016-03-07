@@ -45,7 +45,7 @@ describe('hamaca catalog microservice', function () {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
                 for (var key in newProductData) {
-                    expect(res.body[key]).to.equal(newProductData[key]);
+                    expect(res.body[key]).to.eql(newProductData[key]);
                 }
                 done();
             });
