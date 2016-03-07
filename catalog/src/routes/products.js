@@ -39,4 +39,28 @@ router.get('/:id', function (req, res) {
     });
 });
 
+/*
+ * Update a product
+ */
+router.patch('/:id', function (req, res) {
+    // get request parameters
+    var acceptedKeys = ['title', 'price', 'sku', 'description'];
+    var updatedData = {
+        id: parseInt(req.params['id'])
+    };
+    for (var i = 0; i < acceptedKeys.length; i++) {
+        updatedValue = req.body[acceptedKeys[i]];
+        if (typeof updatedValue !== 'undefined') {
+            updatedData[acceptedKeys[i]] = updatedValue;
+        }
+    }
+
+    // process data
+    var redisClient = req.redisClient;
+    var product = new Product(updatedData, redisClient);
+    product.save(function (entityId) {
+        res.sendStatus(204);
+    });
+});
+
 module.exports = router;
