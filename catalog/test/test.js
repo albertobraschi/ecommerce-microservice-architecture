@@ -54,7 +54,7 @@ describe('hamaca catalog microservice', function () {
     it('updates a product', function (done) {
         superagent
             .patch(HOST + '/products/' + id)
-            .query({
+            .send({
                 id: id,
                 title: 'Egg Chair!'
             })
