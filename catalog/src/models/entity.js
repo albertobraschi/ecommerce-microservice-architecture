@@ -12,19 +12,32 @@ Entity.prototype.save = function (callback) {
     if (typeof type === 'undefined') {
         throw "Invalid entity";
     }
-    var idCounter = 'next_' + type + '_id';
     var redisClient = this.redisClient;
-    redisClient.incr(idCounter, function (err, reply) {
-        var entityId = reply;
-        var key = type + ':' + entityId;
+    if (typeof data.id !== 'undefined') {
+        // update existing product
+        var key = type + ':' + data.id;
         redisClient.hmset(key,
             data, function (err, res) {
                 if (err !== null) {
                     throw err;
                 }
-                callback(entityId);
+                callback();
             });
-    });
+    } else {
+        // add new product
+        var idCounter = 'next_' + type + '_id';
+        redisClient.incr(idCounter, function (err, reply) {
+            var entityId = reply;
+            var key = type + ':' + entityId;
+            redisClient.hmset(key,
+                data, function (err, res) {
+                    if (err !== null) {
+                        throw err;
+                    }
+                    callback(entityId);
+                });
+        });
+    }
 };
 
 Entity.prototype.load = function (callback) {
