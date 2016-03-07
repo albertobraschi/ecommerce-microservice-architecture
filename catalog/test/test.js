@@ -49,5 +49,30 @@ describe('hamaca catalog microservice', function () {
                 }
                 done();
             });
-    })
+    });
+
+    it('updates a product', function (done) {
+        superagent
+            .patch(HOST + '/products/' + id)
+            .query({
+                id: id,
+                title: 'Egg Chair!'
+            })
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(204);
+                done();
+            });
+    });
+
+    it('fetches the updated product', function (done) {
+        superagent
+            .get(HOST + '/products/' + id)
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(200);
+                expect(res.body.title).to.eql('Egg Chair!');
+                done();
+            });
+    });
 });
