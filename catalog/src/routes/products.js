@@ -3,8 +3,6 @@ var router = express.Router();
 
 var Product = require('../models/product');
 
-const NEXT_PRODUCT_ID;
-
 /*
  * Add a new product
  */
@@ -13,6 +11,7 @@ router.post('/', function (req, res) {
     var productData = {
         title: req.body.title,
         price: req.body.price,
+        sku: req.body.sku,
         description: req.body.description
     };
     // process data
