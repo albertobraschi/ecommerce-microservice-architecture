@@ -19,6 +19,10 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Setup body-parser for POST parameters retrieval
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 // Routes
 var indexRoutes = require('./routes/index');
 var productsRoutes = require('./routes/products');

@@ -11,9 +11,9 @@ const NEXT_PRODUCT_ID;
 router.post('/', function (req, res) {
     // get request parameters
     var productData = {
-        title: req.params['title'],
-        price: req.params['price'],
-        description: req.params['description'],
+        title: req.body.title,
+        price: req.body.price,
+        description: req.body.description
     };
     // process data
     var redisClient = req.redisClient;
