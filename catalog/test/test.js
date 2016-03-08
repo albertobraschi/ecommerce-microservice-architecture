@@ -106,4 +106,18 @@ describe('hamaca catalog microservice', function () {
                 done();
             });
     });
+
+    it('doesn\'t accept a price that is not a number', function (done) {
+        var brokenProduct = {};
+        for (var i = 0; i < mandatoryFields.length; i++) {
+            brokenProduct[mandatoryFields[i]] = newProductData[mandatoryFields[i]];
+        }
+        brokenProduct.price = 'This is not a number';
+        superagent.post(HOST + '/products')
+            .send(brokenProduct)
+            .end(function (e, res) {
+                expect(e).to.not.eql(null);
+                done();
+            });
+    });
 });
