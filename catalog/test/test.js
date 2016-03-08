@@ -10,8 +10,11 @@ describe('hamaca catalog microservice', function () {
         price: 666,
         sku: 'CHA-01',
         description: 'The Egg is a chair designed by Arne Jacobsen in 1958 for the Radisson SAS hotel in Copenhagen, ' +
-        'Denmark. It is manufactured by Republic of Fritz Hansen.'
+        'Denmark. It is manufactured by Republic of Fritz Hansen.',
+        foo: 'bar' // invalid key, should be ignored
     };
+
+    var mandatoryFields  = ['title', 'price', 'sku', 'description'];
 
     it('is online', function (done) {
         superagent
@@ -41,8 +44,24 @@ describe('hamaca catalog microservice', function () {
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
+                for (var i = 0; i < mandatoryFields.length; i++) {
+                    expect(res.body[mandatoryFields[i]]).to.eql(newProductData[mandatoryFields[i]]);
+                }
+                done();
+            });
+    });
+
+    it('doesn\'t save invalid fields', function (done) {
+        superagent
+            .get(HOST + '/products/' + id)
+            .query({
+                id: id
+            })
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(200);
                 for (var key in newProductData) {
-                    expect(res.body[key]).to.eql(newProductData[key]);
+                    expect(res.body.foo).to.be(undefined);
                 }
                 done();
             });
