@@ -102,7 +102,7 @@ describe('hamaca catalog microservice', function () {
         superagent.post(HOST + '/products')
             .send(brokenProduct)
             .end(function (e, res) {
-                expect(e).to.not.eql(null);
+                expect(res.statusCode).to.eql(400);
                 done();
             });
     });
