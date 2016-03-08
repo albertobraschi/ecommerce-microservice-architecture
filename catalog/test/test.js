@@ -90,4 +90,20 @@ describe('hamaca catalog microservice', function () {
                 done();
             });
     });
+
+    it('doesn\'t save products with one of the mandatory fields missing', function (done) {
+        var fieldToExclude = Math.floor((Math.random() * mandatoryFields));
+        var brokenProduct = {};
+        for (var i = 0; i < mandatoryFields.length; i++) {
+            if (i !== fieldToExclude) {
+                brokenProduct[mandatoryFields[i]] = newProductData[mandatoryFields[i]];
+            }
+        }
+        superagent.post(HOST + '/products')
+            .send(brokenProduct)
+            .end(function (e, res) {
+                expect(e).to.not.eql(null);
+                done();
+            });
+    });
 });
