@@ -38,9 +38,6 @@ describe('hamaca catalog microservice', function () {
     it('fetches a product', function (done) {
         superagent
             .get(HOST + '/products/' + id)
-            .query({
-                id: id
-            })
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
@@ -55,7 +52,6 @@ describe('hamaca catalog microservice', function () {
         superagent
             .patch(HOST + '/products/' + id)
             .send({
-                id: id,
                 title: 'Egg Chair!'
             })
             .end(function (e, res) {
