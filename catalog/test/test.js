@@ -92,7 +92,7 @@ describe('hamaca catalog microservice', function () {
     });
 
     it('doesn\'t save products with one of the mandatory fields missing', function (done) {
-        var fieldToExclude = Math.floor((Math.random() * mandatoryFields));
+        var fieldToExclude = Math.floor((Math.random() * mandatoryFields.length));
         var brokenProduct = {};
         for (var i = 0; i < mandatoryFields.length; i++) {
             if (i !== fieldToExclude) {
