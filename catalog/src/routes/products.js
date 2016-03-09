@@ -14,25 +14,18 @@ router.post('/', function (req, res) {
         sku: req.body.sku,
         description: req.body.description
     };
-    var mandatoryFields  = ['title', 'price', 'sku', 'description'];
-    var missingParameter = false;
-    for (var i = 0; i<mandatoryFields.length; i++) {
-        if (typeof productData[mandatoryFields[i]] === 'undefined') {
-            missingParameter = mandatoryFields[i];
-        }
-    }
+    var redisClient = req.redisClient;
+    var product = new Product(productData, redisClient);
     // process data
-    if (missingParameter) {
-        res.status(400);
-        res.send('Missing parameter: ' + missingParameter);
-    }
-    else {
-        var redisClient = req.redisClient;
-        var product = new Product(productData, redisClient);
+    if (product.validate()) {
         product.save(function (entityId) {
             res.status(201);
             res.json({id: entityId});
         });
+    }
+    else {
+        res.status(400);
+        res.send('Error: Invalid product data');
     }
 });
 
