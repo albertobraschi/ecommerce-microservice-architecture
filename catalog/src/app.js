@@ -31,4 +31,4 @@ app.use('/products', productsRoutes);
 
 // Start webserver
 app.listen(PORT);
-console.log('Running on http://localhost:' + PORT);
+console.log('Hamaca catalog microservice is now running on port: ' + PORT);
