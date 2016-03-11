@@ -120,4 +120,22 @@ describe('hamaca catalog microservice', function () {
                 done();
             });
     });
+
+    it('lists the products', function (done) {
+        superagent
+            .get(HOST + '/products')
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(200);
+                expect(res.body.page).to.eql(1);
+                expect(res.body.pages).to.be.greatherThan(3);
+                expect(res.body.total).to.be.greatherThan(0);
+                expect(res.body.products).to.be.an('object');
+                expect(res.body.products[0]).to.be.an('object');
+                for (var i = 0; i < mandatoryFields.length; i++) {
+                    expect(res.body.products[0][mandatoryFields[i]]).to.be.ok();
+                }
+                done();
+            });
+    });
 });
