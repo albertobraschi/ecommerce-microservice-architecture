@@ -158,4 +158,12 @@ describe('hamaca catalog microservice', function () {
             });
     });
 
+    it('issues a 404 for invalid routes', function (done) {
+        superagent
+            .get(HOST + '/this_is_an_invalid_route')
+            .end(function (e, res) {
+                expect(res.statusCode).to.eql(404);
+                done();
+            });
+    });
 });
