@@ -138,4 +138,24 @@ describe('hamaca catalog microservice', function () {
                 done();
             });
     });
+
+    it('deletes a product', function (done) {
+        superagent
+            .delete(HOST + '/products/' + id)
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(204);
+                done();
+            });
+    });
+
+    it('doesn\'t fetch deleted products', function (done) {
+        superagent
+            .get(HOST + '/products/' + id)
+            .end(function (e, res) {
+                expect(res.statusCode).to.eql(404);
+                done();
+            });
+    });
+
 });
