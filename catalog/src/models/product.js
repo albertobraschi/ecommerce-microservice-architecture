@@ -37,7 +37,7 @@ Product.loadRange = function (startRange, endRange, redisClient, done) {
             for (var dataKey in res) {
                 productData[dataKey] = res[dataKey];
             }
-            products.push(new Product(productData));
+            products.push(productData);
             if (products.length === endRange) {
                 done(products);
             }

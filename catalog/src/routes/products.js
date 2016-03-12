@@ -77,6 +77,8 @@ router.get('/', function (req, res) {
     Product.loadRange(1, 100, redisClient, function (products) {
         res.status(200);
         var response = {
+            page: 1,
+            pages: 1,
             products: products
         };
         res.json(response);
