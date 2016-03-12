@@ -20,4 +20,8 @@ Product.prototype.validate = function () {
     return isValid;
 };
 
+Product.loadRange = function (startRange, endRange, redisClient, done) {
+    Entity.loadRange('product', startRange, endRange, redisClient, done);
+};
+
 module.exports = Product;

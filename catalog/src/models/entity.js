@@ -59,4 +59,33 @@ Entity.prototype.load = function (callback) {
     });
 };
 
+Entity.loadRange = function (type, startRange, endRange, redisClient, done) {
+    if (typeof type === 'undefined') {
+        throw "Invalid entity";
+    }
+    // check endrange
+    if (typeof startRange !== 'number' ||
+            typeof endRange !== 'number' ||
+            startRange < 1 ||
+            endRange < startRange) {
+        throw 'Invalid entity range';
+    }
+    var i = startRange;
+    var entities = [];
+    do {
+        var key = type + ':' + i;
+        redisClient.hgetall(key, function (err, res) {
+            var entityData = {};
+            for (var key in res) {
+                entityData[key] = res[key];
+            }
+            entities.push(new Entity(entityData));
+            if (entities.length === endRange) {
+                done(entities);
+            }
+        });
+        i++;
+    } while (i <= endRange);
+};
+
 module.exports = Entity;
