@@ -69,4 +69,18 @@ router.patch('/:id', function (req, res) {
     });
 });
 
+/*
+ * List the products
+ */
+router.get('/', function (req, res) {
+    var redisClient = req.redisClient;
+    Product.loadRange(1, 100, redisClient, function (products) {
+        res.status(200);
+        var response = {
+            products: products
+        };
+        res.json(response);
+    });
+});
+
 module.exports = router;
