@@ -6,9 +6,8 @@ const KEY_PREFIX = 'product';
 const KEY_SEPARATOR = ':';
 const NEXT_PRODUCT_ID = 'next_product_id';
 
-var Product = function (data, redisClient) {
+var Product = function (data) {
     this.data = data;
-    this.redisClient = redisClient;
 };
 
 Product.prototype.data = {};
