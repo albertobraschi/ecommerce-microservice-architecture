@@ -1,5 +1,3 @@
-var util = require('util');
-
 var Product = require('../models/product');
 
 const KEY_SEPARATOR = ':';

@@ -1,5 +1,3 @@
-var util = require('util');
-
 var mandatoryFields  = ['title', 'price', 'sku', 'description'];
 
 const KEY_PREFIX = 'product';
