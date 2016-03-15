@@ -25,9 +25,9 @@ RedisManager.prototype.saveProduct = function (product, done) {
             });
     } else {
         // add new product
-        var newId = NEXT_PRODUCT_ID;
-        redisClient.incr(newId, function (err, reply) {
+        redisClient.incr(NEXT_PRODUCT_ID, function (err, reply) {
             var productId = reply;
+            product.data.id = productId;
             var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
             redisClient.hmset(key,
                 product.data, function (err, res) {
