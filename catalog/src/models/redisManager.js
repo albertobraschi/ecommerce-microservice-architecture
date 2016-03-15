@@ -54,7 +54,7 @@ RedisManager.prototype.loadProduct = function (id, done) {
     });
 };
 
-RedisManager.prototype.loadRange = function (startRange, endRange, done) {
+RedisManager.prototype.loadRange = function (startRange, endRange, done, dataOnly) {
     if (typeof startRange !== 'number' ||
             typeof endRange !== 'number' ||
             startRange < 1 ||
@@ -75,7 +75,13 @@ RedisManager.prototype.loadRange = function (startRange, endRange, done) {
                     for (var dataKey in res) {
                         productData[dataKey] = res[dataKey];
                     }
-                    products.push(productData);
+                    var product;
+                    if (dataOnly) {
+                        product = productData;
+                    } else {
+                        product = new Product(productData);
+                    }
+                    products.push(product);
                 }
                 if (products.length >= endRange) {
                     done(products);

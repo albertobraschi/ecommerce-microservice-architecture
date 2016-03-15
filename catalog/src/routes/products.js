@@ -80,7 +80,7 @@ router.get('/', function (req, res) {
             products: products
         };
         res.json(response);
-    });
+    }, true);
 });
 
 module.exports = router;
