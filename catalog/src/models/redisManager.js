@@ -5,7 +5,7 @@ var Product = require('../models/product');
 const KEY_SEPARATOR = ':';
 
 const PRODUCT_PREFIX = 'product';
-const NEXT_PRODUCT_ID = 'next_product_id';
+const NEXT_PRODUCT_ID_KEY = 'next_product_id';
 
 var RedisManager = function (redisClient) {
     this.redisClient = redisClient;
@@ -25,7 +25,7 @@ RedisManager.prototype.saveProduct = function (product, done) {
             });
     } else {
         // add new product
-        redisClient.incr(NEXT_PRODUCT_ID, function (err, reply) {
+        redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
             var productId = reply;
             product.data.id = productId;
             var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
@@ -44,9 +44,8 @@ RedisManager.prototype.loadProduct = function (id, done) {
     if (typeof id !== 'number') {
         throw "Invalid id or id not set";
     }
-    var redisClient = this.redisClient;
     var key = PRODUCT_PREFIX + KEY_SEPARATOR + id;
-    redisClient.hgetall(key, function (err, res) {
+    this.redisClient.hgetall(key, function (err, res) {
         var data = {};
         for (var key in res) {
             data[key] = res[key];
@@ -64,21 +63,33 @@ RedisManager.prototype.loadRange = function (startRange, endRange, done) {
     }
     var i = startRange;
     var products = [];
-    // TODO don't try to load non existing products
-    do {
-        var key = PRODUCT_PREFIX + KEY_SEPARATOR + i;
-        this.redisClient.hgetall(key, function (err, res) {
-            var productData = {};
-            for (var dataKey in res) {
-                productData[dataKey] = res[dataKey];
-            }
-            products.push(new Product(productData));
-            if (products.length === endRange) {
-                done(products);
-            }
-        });
-        i++;
-    } while (i <= endRange);
+    this.getNumberOfProducts(function (numberOfProducts) {
+        if (numberOfProducts < endRange) {
+            endRange = numberOfProducts;
+        }
+        do {
+            var key = PRODUCT_PREFIX + KEY_SEPARATOR + i;
+            this.redisClient.hgetall(key, function (err, res) {
+                if (res !== null) {
+                    var productData = {};
+                    for (var dataKey in res) {
+                        productData[dataKey] = res[dataKey];
+                    }
+                    products.push(productData);
+                }
+                if (products.length >= endRange) {
+                    done(products);
+                }
+            });
+            i++;
+        } while (i <= endRange);
+    })
 };
+
+RedisManager.prototype.getNumberOfProducts = function (done) {
+    this.redisClient.get(NEXT_PRODUCT_ID_KEY, function (err, res) {
+        done(res);
+    });
+}
 
 module.exports = RedisManager;
