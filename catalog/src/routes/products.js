@@ -15,7 +15,7 @@ router.post('/', function (req, res) {
         sku: req.body.sku,
         description: req.body.description
     };
-    var redisManager = new RedisManager(req.redisClient);
+    var redisManager = new RedisManager();
     var product = new Product(productData);
     // process data
     if (product.validate()) {
@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
  * Get a product
  */
 router.get('/:id', function (req, res) {
-    var redisManager = new RedisManager(req.redisClient);
+    var redisManager = new RedisManager();
     var productId = parseInt(req.params['id']);
     if (isNaN(productId)) {
         throw 'Invalid id';
@@ -53,7 +53,7 @@ router.patch('/:id', function (req, res) {
     var acceptedKeys = ['title', 'price', 'sku', 'description'];
     var id = parseInt(req.params['id']);
 
-    var redisManager = new RedisManager(req.redisClient);
+    var redisManager = new RedisManager();
     redisManager.loadProduct(id, function (product) {
         for (var i = 0; i < acceptedKeys.length; i++) {
             updatedValue = req.body[acceptedKeys[i]];
@@ -71,7 +71,7 @@ router.patch('/:id', function (req, res) {
  * List the products
  */
 router.get('/', function (req, res) {
-    var redisManager = new RedisManager(req.redisClient);
+    var redisManager = new RedisManager();
     redisManager.loadRange(1, 100, function (products) {
         res.status(200);
         var response = {

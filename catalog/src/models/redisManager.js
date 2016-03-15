@@ -1,40 +1,44 @@
 var Product = require('../models/product');
+var Redis = require("redis");
 
 const KEY_SEPARATOR = ':';
-
 const PRODUCT_PREFIX = 'product';
 const NEXT_PRODUCT_ID_KEY = 'next_product_id';
 
-var RedisManager = function (redisClient) {
-    this.redisClient = redisClient;
+var RedisManager = function () {
+    this.redisClient = Redis.createClient({
+        host: 'catalog-data.hamaca.io'
+    });
+    this.redisClient.on("error", function (err) {
+        console.log("Redis Error: " + err);
+    });
 };
 
 RedisManager.prototype.saveProduct = function (product, done) {
-    var redisClient = this.redisClient;
     if (typeof product.data.id !== 'undefined') {
         // update existing product
         var key = PRODUCT_PREFIX + KEY_SEPARATOR + product.data.id;
-        redisClient.hmset(key,
+        this.redisClient.hmset(key,
             product.data, function (err, res) {
                 if (err !== null) {
                     throw err;
                 }
                 done();
-            });
+            }.bind(this));
     } else {
         // add new product
-        redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
+        this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
             var productId = reply;
             product.data.id = productId;
             var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
-            redisClient.hmset(key,
+            this.redisClient.hmset(key,
                 product.data, function (err, res) {
                     if (err !== null) {
                         throw err;
                     }
                     done(productId);
-                });
-        });
+                }.bind(this));
+        }.bind(this));
     }
 };
 
@@ -87,7 +91,7 @@ RedisManager.prototype.loadRange = function (startRange, endRange, done, dataOnl
             });
             i++;
         } while (i <= endRange);
-    })
+    }.bind(this))
 };
 
 RedisManager.prototype.getNumberOfProducts = function (done) {
