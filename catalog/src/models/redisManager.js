@@ -3,7 +3,9 @@ var Redis = require("redis");
 
 const KEY_SEPARATOR = ':';
 const PRODUCT_PREFIX = 'product';
+
 const NEXT_PRODUCT_ID_KEY = 'next_product_id';
+const ACTIVE_PRODUCTS_LIST_KEY = 'active_products';
 
 var RedisManager = function () {
     this.redisClient = Redis.createClient({
@@ -18,6 +20,14 @@ function checkErr(err) {
     if (err !== null) {
         throw err;
     }
+}
+
+RedisManager.prototype.addActiveProduct = function (productId) {
+    this.redisClient.rpush(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
+}
+
+RedisManager.prototype.removeActiveProduct = function (productId) {
+    this.redisClient.lrem(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
 }
 
 RedisManager.prototype._updateExistingProduct = function (product, done) {
@@ -38,6 +48,7 @@ RedisManager.prototype._addNewProduct = function (product, done) {
         this.redisClient.hmset(key,
             product.data, function (err, res) {
                 checkErr(err);
+                this.addActiveProduct(productId);
                 done(productId);
             }.bind(this));
     }.bind(this));   
