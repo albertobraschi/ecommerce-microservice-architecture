@@ -14,31 +14,39 @@ var RedisManager = function () {
     });
 };
 
-RedisManager.prototype.saveProduct = function (product, done) {
-    if (typeof product.data.id !== 'undefined') {
-        // update existing product
-        var key = PRODUCT_PREFIX + KEY_SEPARATOR + product.data.id;
+function checkErr(err) {
+    if (err !== null) {
+        throw err;
+    }
+}
+
+RedisManager.prototype._updateExistingProduct = function (product, done) {
+    var key = PRODUCT_PREFIX + KEY_SEPARATOR + product.data.id;
+    this.redisClient.hmset(key,
+        product.data, function (err, res) {
+            checkErr(err);
+            done();
+        }.bind(this));
+}
+
+RedisManager.prototype._addNewProduct = function (product, done) {
+    this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
+        var productId = reply;
+        product.data.id = productId;
+        var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
         this.redisClient.hmset(key,
             product.data, function (err, res) {
-                if (err !== null) {
-                    throw err;
-                }
-                done();
+                checkErr(err);
+                done(productId);
             }.bind(this));
+    }.bind(this));   
+}
+
+RedisManager.prototype.saveProduct = function (product, done) {
+    if (typeof product.data.id !== 'undefined') {
+        this._updateExistingProduct(product, done);
     } else {
-        // add new product
-        this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
-            var productId = reply;
-            product.data.id = productId;
-            var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
-            this.redisClient.hmset(key,
-                product.data, function (err, res) {
-                    if (err !== null) {
-                        throw err;
-                    }
-                    done(productId);
-                }.bind(this));
-        }.bind(this));
+        this._addNewProduct(product, done);
     }
 };
 
