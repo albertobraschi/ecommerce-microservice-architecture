@@ -81,6 +81,7 @@ RedisManager.prototype.loadProduct = function (id, done) {
         for (var key in res) {
             data[key] = res[key];
         }
+        data.enabled = data.enabled === 'true' // TODO add product data sanitizer
         done(new Product(data));
     });
 };

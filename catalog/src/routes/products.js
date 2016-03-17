@@ -12,7 +12,8 @@ router.post('/', function (req, res) {
         title: req.body.title,
         price: req.body.price,
         sku: req.body.sku,
-        description: req.body.description
+        description: req.body.description,
+        enabled: true
     };
     var redisManager = new RedisManager();
     var product = new Product(productData);
@@ -39,8 +40,13 @@ router.get('/:id', function (req, res) {
         throw 'Invalid id';
     }
     var product = redisManager.loadProduct(productId, function (product) {
-        res.status(200);
-        res.json(product.data);
+        if (product.data.enabled) {
+            res.status(200);
+            res.json(product.data);
+        }
+        else {
+            res.sendStatus(404);
+        }
     });
 });
 
@@ -91,7 +97,12 @@ router.delete('/:id', function (req, res) {
         if (productNotfound) {
             res.sendStatus(404);
         } else {
-            res.sendStatus(204);
+            redisManager.loadProduct(id, function (product) {
+                product.data.enabled = false;
+                product.save(redisManager, function () {
+                    res.sendStatus(204);
+                });
+            })
         }
     })
 });
