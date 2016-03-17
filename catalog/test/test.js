@@ -4,6 +4,8 @@ var expect = require('expect.js');
 const HOST = 'http://catalog.hamaca.io:8080';
 const PRODUCTS_ROUTE = '/products/';
 
+const PAGE_SIZE = 10;
+
 describe('hamaca catalog microservice', function () {
 
     var id;
@@ -132,6 +134,7 @@ describe('hamaca catalog microservice', function () {
                 expect(res.body.page).to.eql(1);
                 expect(res.body.pages).to.be.greaterThan(0);
                 expect(res.body.products).to.be.an('object');
+                expect(res.body.products.length).to.be.lessThan(PAGE_SIZE);
                 expect(res.body.products[0]).to.be.an('object');
                 for (var i = 0; i < mandatoryFields.length; i++) {
                     expect(res.body.products[0][mandatoryFields[i]]).to.be.ok();
