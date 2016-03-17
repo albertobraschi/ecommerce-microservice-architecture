@@ -8,7 +8,6 @@ var RedisManager = require('../models/redisManager');
  * Add a new product
  */
 router.post('/', function (req, res) {
-    // get request parameters
     var productData = {
         title: req.body.title,
         price: req.body.price,
@@ -17,7 +16,7 @@ router.post('/', function (req, res) {
     };
     var redisManager = new RedisManager();
     var product = new Product(productData);
-    // process data
+
     if (product.validate()) {
         product.save(redisManager, function (productId) {
             res.status(201);
@@ -49,7 +48,6 @@ router.get('/:id', function (req, res) {
  * Update a product
  */
 router.patch('/:id', function (req, res) {
-    // get request parameters
     var acceptedKeys = ['title', 'price', 'sku', 'description'];
     var id = parseInt(req.params['id']);
 

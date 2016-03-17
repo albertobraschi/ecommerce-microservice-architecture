@@ -40,9 +40,9 @@ RedisManager.prototype._updateExistingProduct = function (product, done) {
 }
 
 RedisManager.prototype._addNewProduct = function (product, done) {
-    this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, reply) {
+    this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, res) {
         checkErr(err);
-        var productId = reply;
+        var productId = res;
         product.data.id = productId;
         var key = PRODUCT_PREFIX + KEY_SEPARATOR + productId;
         this.redisClient.hmset(key,
