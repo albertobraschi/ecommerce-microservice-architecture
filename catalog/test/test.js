@@ -1,6 +1,8 @@
 var superagent = require('superagent');
 var expect = require('expect.js');
+
 const HOST = 'http://catalog.hamaca.io:8080';
+const PRODUCTS_ROUTE = '/products/';
 
 describe('hamaca catalog microservice', function () {
 
@@ -27,7 +29,7 @@ describe('hamaca catalog microservice', function () {
     });
 
     it('adds a new product', function (done) {
-        superagent.post(HOST + '/products')
+        superagent.post(HOST + PRODUCTS_ROUTE)
             .send(newProductData)
             .end(function (e, res) {
                 expect(e).to.eql(null);
@@ -40,7 +42,7 @@ describe('hamaca catalog microservice', function () {
 
     it('fetches a product', function (done) {
         superagent
-            .get(HOST + '/products/' + id)
+            .get(HOST + PRODUCTS_ROUTE + id)
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
@@ -53,7 +55,7 @@ describe('hamaca catalog microservice', function () {
 
     it('doesn\'t save invalid fields', function (done) {
         superagent
-            .get(HOST + '/products/' + id)
+            .get(HOST + PRODUCTS_ROUTE + id)
             .query({
                 id: id
             })
@@ -69,7 +71,7 @@ describe('hamaca catalog microservice', function () {
 
     it('updates a product', function (done) {
         superagent
-            .patch(HOST + '/products/' + id)
+            .patch(HOST + PRODUCTS_ROUTE + id)
             .send({
                 title: 'Egg Chair!'
             })
@@ -82,7 +84,7 @@ describe('hamaca catalog microservice', function () {
 
     it('fetches the updated product', function (done) {
         superagent
-            .get(HOST + '/products/' + id)
+            .get(HOST + PRODUCTS_ROUTE + id)
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
@@ -99,7 +101,7 @@ describe('hamaca catalog microservice', function () {
                 brokenProduct[mandatoryFields[i]] = newProductData[mandatoryFields[i]];
             }
         }
-        superagent.post(HOST + '/products')
+        superagent.post(HOST + PRODUCTS_ROUTE)
             .send(brokenProduct)
             .end(function (e, res) {
                 expect(res.statusCode).to.eql(400);
@@ -113,7 +115,7 @@ describe('hamaca catalog microservice', function () {
             brokenProduct[mandatoryFields[i]] = newProductData[mandatoryFields[i]];
         }
         brokenProduct.price = 'This is not a number';
-        superagent.post(HOST + '/products')
+        superagent.post(HOST + PRODUCTS_ROUTE)
             .send(brokenProduct)
             .end(function (e, res) {
                 expect(res.statusCode).to.eql(400);
@@ -123,7 +125,7 @@ describe('hamaca catalog microservice', function () {
 
     it('lists the products', function (done) {
         superagent
-            .get(HOST + '/products')
+            .get(HOST + PRODUCTS_ROUTE)
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
@@ -140,7 +142,7 @@ describe('hamaca catalog microservice', function () {
 
     it('deletes a product', function (done) {
         superagent
-            .delete(HOST + '/products/' + id)
+            .delete(HOST + PRODUCTS_ROUTE + id)
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(204);
@@ -150,7 +152,7 @@ describe('hamaca catalog microservice', function () {
 
     it('doesn\'t fetch deleted products', function (done) {
         superagent
-            .get(HOST + '/products/' + id)
+            .get(HOST + PRODUCTS_ROUTE + id)
             .end(function (e, res) {
                 expect(res.statusCode).to.eql(404);
                 done();
@@ -168,7 +170,7 @@ describe('hamaca catalog microservice', function () {
 
     it('issues a 404 when trying to delete a not existing product', function (done) {
         superagent
-            .delete(HOST + '/products/' + '/this_is_an_invalid_route')
+            .delete(HOST + PRODUCTS_ROUTE + '/this_is_an_invalid_route')
             .end(function (e, res) {
                 expect(res.statusCode).to.eql(404);
                 done();
