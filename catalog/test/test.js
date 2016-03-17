@@ -165,4 +165,13 @@ describe('hamaca catalog microservice', function () {
                 done();
             });
     });
+
+    it('issues a 404 when trying to delete a not existing product', function (done) {
+        superagent
+            .delete(HOST + '/products/' + '/this_is_an_invalid_route')
+            .end(function (e, res) {
+                expect(res.statusCode).to.eql(404);
+                done();
+            });
+    });
 });
