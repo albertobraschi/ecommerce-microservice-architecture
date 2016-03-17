@@ -81,4 +81,19 @@ router.get('/', function (req, res) {
     }, true);
 });
 
+/*
+ * Delete (soft) a product
+ */
+router.delete('/:id', function (req, res) {
+    var id = parseInt(req.params['id']);
+    var redisManager = new RedisManager();
+    redisManager.removeActiveProduct(id, function (productNotfound) {
+        if (productNotfound) {
+            res.sendStatus(404);
+        } else {
+            res.sendStatus(204);
+        }
+    })
+});
+
 module.exports = router;

@@ -22,14 +22,6 @@ function checkErr(err) {
     }
 }
 
-RedisManager.prototype.addActiveProduct = function (productId) {
-    this.redisClient.rpush(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
-}
-
-RedisManager.prototype.removeActiveProduct = function (productId) {
-    this.redisClient.lrem(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
-}
-
 RedisManager.prototype._updateExistingProduct = function (product, done) {
     var key = PRODUCT_PREFIX + KEY_SEPARATOR + product.data.id;
     this.redisClient.hmset(key,
@@ -52,6 +44,21 @@ RedisManager.prototype._addNewProduct = function (product, done) {
                 done(productId);
             }.bind(this));
     }.bind(this));   
+}
+
+RedisManager.prototype.addActiveProduct = function (productId) {
+    this.redisClient.rpush(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
+}
+
+RedisManager.prototype.removeActiveProduct = function (productId, done) {
+    this.redisClient.lrem(ACTIVE_PRODUCTS_LIST_KEY, 1, productId, function (err, res) {
+        var productNotfound = false;
+        if (res === 0) {
+            productNotfound = true;
+        }
+        checkErr(err);
+        done(productNotfound);
+    });
 }
 
 RedisManager.prototype.saveProduct = function (product, done) {
