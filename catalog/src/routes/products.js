@@ -76,10 +76,11 @@ router.patch('/:id', function (req, res) {
  */
 router.get('/', function (req, res) {
     var redisManager = new RedisManager();
-    redisManager.loadRange(1, 100, function (products) {
+    var page = parseInt(req.query.page);
+    redisManager.loadPage(page, function (products) {
         res.status(200);
         var response = {
-            page: 1,
+            page: page,
             pages: 1,
             products: products
         };

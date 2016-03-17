@@ -7,6 +7,8 @@ const PRODUCT_PREFIX = 'product';
 const NEXT_PRODUCT_ID_KEY = 'next_product_id';
 const ACTIVE_PRODUCTS_LIST_KEY = 'active_products';
 
+const PAGE_SIZE = 10;
+
 var RedisManager = function () {
     this.redisClient = Redis.createClient({
         host: 'catalog-data.hamaca.io'
@@ -71,7 +73,7 @@ RedisManager.prototype.saveProduct = function (product, done) {
     }
 };
 
-RedisManager.prototype.loadProduct = function (id, done) {
+RedisManager.prototype.loadProduct = function (id, done, onlyData) {
     if (typeof id !== 'number') {
         throw "Invalid id or id not set";
     }
@@ -82,50 +84,34 @@ RedisManager.prototype.loadProduct = function (id, done) {
             data[key] = res[key];
         }
         data.enabled = data.enabled === 'true' // TODO add product data sanitizer
-        done(new Product(data));
+        if (typeof onlyData !== 'undefined' && onlyData) {
+            done(data);
+        } else {
+            done(new Product(data));
+        }
     });
 };
 
-RedisManager.prototype.loadRange = function (startRange, endRange, done, dataOnly) {
-    if (typeof startRange !== 'number' ||
-            typeof endRange !== 'number' ||
-            startRange < 1 ||
-            endRange < startRange) {
-        throw 'Invalid entity range';
-    }
-    var i = startRange;
-    var products = [];
-    this.getNumberOfProducts(function (numberOfProducts) {
-        if (numberOfProducts < endRange) {
-            endRange = numberOfProducts;
-        }
-        do {
-            var key = PRODUCT_PREFIX + KEY_SEPARATOR + i;
-            this.redisClient.hgetall(key, function (err, res) {
-                if (res !== null) {
-                    var productData = {};
-                    for (var dataKey in res) {
-                        productData[dataKey] = res[dataKey];
-                    }
-                    var product;
-                    if (dataOnly) {
-                        product = productData;
-                    } else {
-                        product = new Product(productData);
-                    }
-                    products.push(product);
-                }
-                if (products.length >= endRange) {
+RedisManager.prototype.loadPage = function (page, done, dataOnly) {
+    startRange = (page - 1) * PAGE_SIZE;
+    endRange = page * PAGE_SIZE - 1;
+    this.redisClient.lrange(ACTIVE_PRODUCTS_LIST_KEY, startRange, endRange, function (err, res) {
+        checkErr(err);
+        var products = [];
+        for (var i = 0; i < res.length; i++) {
+            this.loadProduct(parseInt(res[i]), function (product) {
+                products.push(product);
+                if (products.length >= res.length) {
                     done(products);
                 }
-            });
-            i++;
-        } while (i <= endRange);
-    }.bind(this))
+            }.bind(this), true)
+        }
+    }.bind(this));
 };
 
 RedisManager.prototype.getNumberOfProducts = function (done) {
     this.redisClient.get(NEXT_PRODUCT_ID_KEY, function (err, res) {
+        checkErr(err);
         done(res);
     });
 }
