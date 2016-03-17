@@ -27,7 +27,9 @@ RedisManager.prototype._updateExistingProduct = function (product, done) {
     this.redisClient.hmset(key,
         product.data, function (err, res) {
             checkErr(err);
-            done();
+            if (typeof done !== 'undefined') {
+                done();
+            }
         }.bind(this));
 }
 
