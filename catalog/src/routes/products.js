@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Product = require('../models/product');
-var RedisManager = require('../models/redisManager');
+var DataStore = require('../models/dataStore');
 
 /*
  * Add a new product
@@ -15,11 +15,11 @@ router.post('/', function (req, res) {
         description: req.body.description,
         enabled: true
     };
-    var redisManager = new RedisManager();
+    var dataStore = new DataStore();
     var product = new Product(productData);
 
     if (product.validate()) {
-        product.save(redisManager, function (productId) {
+        product.save(dataStore, function (productId) {
             res.status(201);
             res.json({id: productId});
         });
@@ -34,12 +34,12 @@ router.post('/', function (req, res) {
  * Get a product
  */
 router.get('/:id', function (req, res) {
-    var redisManager = new RedisManager();
+    var dataStore = new DataStore();
     var productId = parseInt(req.params['id']);
     if (isNaN(productId)) {
         throw 'Invalid id';
     }
-    var product = redisManager.loadProduct(productId, function (product) {
+    var product = dataStore.loadProduct(productId, function (product) {
         if (product.data.enabled) {
             res.status(200);
             res.json(product.data);
@@ -57,15 +57,15 @@ router.patch('/:id', function (req, res) {
     var acceptedKeys = ['title', 'price', 'sku', 'description'];
     var id = parseInt(req.params['id']);
 
-    var redisManager = new RedisManager();
-    redisManager.loadProduct(id, function (product) {
+    var dataStore = new DataStore();
+    dataStore.loadProduct(id, function (product) {
         for (var i = 0; i < acceptedKeys.length; i++) {
             updatedValue = req.body[acceptedKeys[i]];
             if (typeof updatedValue !== 'undefined') {
                 product.data[acceptedKeys[i]] = updatedValue;
             }
         }
-        product.save(redisManager, function (productId) {
+        product.save(dataStore, function (productId) {
             res.sendStatus(204);
         })
     })
@@ -75,9 +75,9 @@ router.patch('/:id', function (req, res) {
  * List the products
  */
 router.get('/', function (req, res) {
-    var redisManager = new RedisManager();
+    var dataStore = new DataStore();
     var page = parseInt(req.query.page);
-    redisManager.loadPage(page, function (products) {
+    dataStore.loadPage(page, function (products) {
         res.status(200);
         var response = {
             page: page,
@@ -93,14 +93,14 @@ router.get('/', function (req, res) {
  */
 router.delete('/:id', function (req, res) {
     var id = parseInt(req.params['id']);
-    var redisManager = new RedisManager();
-    redisManager.removeActiveProduct(id, function (productNotfound) {
+    var dataStore = new DataStore();
+    dataStore.removeActiveProduct(id, function (productNotfound) {
         if (productNotfound) {
             res.sendStatus(404);
         } else {
-            redisManager.loadProduct(id, function (product) {
+            dataStore.loadProduct(id, function (product) {
                 product.data.enabled = false;
-                product.save(redisManager, function () {
+                product.save(dataStore, function () {
                     res.sendStatus(204);
                 });
             })

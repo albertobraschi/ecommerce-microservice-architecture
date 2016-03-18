@@ -9,7 +9,7 @@ const ACTIVE_PRODUCTS_LIST_KEY = 'active_products';
 
 const PAGE_SIZE = 10;
 
-var RedisManager = function () {
+var DataStore = function () {
     this.redisClient = Redis.createClient({
         host: 'catalog-data.hamaca.io'
     });
@@ -24,7 +24,7 @@ function checkErr(err) {
     }
 }
 
-RedisManager.prototype._updateExistingProduct = function (product, done) {
+DataStore.prototype._updateExistingProduct = function (product, done) {
     var key = PRODUCT_PREFIX + KEY_SEPARATOR + product.data.id;
     this.redisClient.hmset(key,
         product.data, function (err, res) {
@@ -35,7 +35,7 @@ RedisManager.prototype._updateExistingProduct = function (product, done) {
         }.bind(this));
 }
 
-RedisManager.prototype._addNewProduct = function (product, done) {
+DataStore.prototype._addNewProduct = function (product, done) {
     this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, res) {
         checkErr(err);
         var productId = res;
@@ -50,11 +50,11 @@ RedisManager.prototype._addNewProduct = function (product, done) {
     }.bind(this));   
 }
 
-RedisManager.prototype.addActiveProduct = function (productId) {
+DataStore.prototype.addActiveProduct = function (productId) {
     this.redisClient.rpush(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
 }
 
-RedisManager.prototype.removeActiveProduct = function (productId, done) {
+DataStore.prototype.removeActiveProduct = function (productId, done) {
     this.redisClient.lrem(ACTIVE_PRODUCTS_LIST_KEY, 1, productId, function (err, res) {
         var productNotfound = false;
         if (res === 0) {
@@ -65,7 +65,7 @@ RedisManager.prototype.removeActiveProduct = function (productId, done) {
     });
 }
 
-RedisManager.prototype.saveProduct = function (product, done) {
+DataStore.prototype.saveProduct = function (product, done) {
     if (typeof product.data.id !== 'undefined') {
         this._updateExistingProduct(product, done);
     } else {
@@ -73,7 +73,7 @@ RedisManager.prototype.saveProduct = function (product, done) {
     }
 };
 
-RedisManager.prototype.loadProduct = function (id, done, onlyData) {
+DataStore.prototype.loadProduct = function (id, done, onlyData) {
     if (typeof id !== 'number') {
         throw "Invalid id or id not set";
     }
@@ -92,7 +92,7 @@ RedisManager.prototype.loadProduct = function (id, done, onlyData) {
     });
 };
 
-RedisManager.prototype.loadPage = function (page, done, dataOnly) {
+DataStore.prototype.loadPage = function (page, done, dataOnly) {
     startRange = (page - 1) * PAGE_SIZE;
     endRange = page * PAGE_SIZE - 1;
     this.redisClient.lrange(ACTIVE_PRODUCTS_LIST_KEY, startRange, endRange, function (err, res) {
@@ -109,11 +109,11 @@ RedisManager.prototype.loadPage = function (page, done, dataOnly) {
     }.bind(this));
 };
 
-RedisManager.prototype.getNumberOfProducts = function (done) {
+DataStore.prototype.getNumberOfProducts = function (done) {
     this.redisClient.get(NEXT_PRODUCT_ID_KEY, function (err, res) {
         checkErr(err);
         done(res);
     });
 }
 
-module.exports = RedisManager;
+module.exports = DataStore;

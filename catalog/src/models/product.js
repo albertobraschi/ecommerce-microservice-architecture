@@ -10,8 +10,8 @@ var Product = function (data) {
 
 Product.prototype.data = {};
 
-Product.prototype.save = function (redisManager, done) {
-    return redisManager.saveProduct(this, done);
+Product.prototype.save = function (dataStore, done) {
+    return dataStore.saveProduct(this, done);
 };
 
 Product.prototype.validate = function () {
