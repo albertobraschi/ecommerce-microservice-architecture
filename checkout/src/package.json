@@ -1,0 +1,12 @@
+{
+  "name": "hamaca-checkout-service",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Hamaca E-commerce checkout service",
+  "author": "Salvo Zappalà <salvo.a.zappala@gmail.com>",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "redis": "^2.4.2"
+  }
+}

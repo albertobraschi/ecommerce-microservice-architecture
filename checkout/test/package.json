@@ -1,0 +1,12 @@
+{
+  "name": "hamaca-checkout-test",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Hamaca E-commerce checkout test suite",
+  "author": "Salvo Zappalà <salvo.a.zappala@gmail.com>",
+  "dependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.4.5",
+    "superagent": "^1.7.2"
+  }
+}
