@@ -1,6 +1,8 @@
 var Product = require('../models/product');
 var Redis = require("redis");
 
+const HOST = 'catalog-data.hamaca.io';
+
 const KEY_SEPARATOR = ':';
 const PRODUCT_PREFIX = 'product';
 
@@ -11,10 +13,10 @@ const PAGE_SIZE = 10;
 
 var DataStore = function () {
     this.redisClient = Redis.createClient({
-        host: 'catalog-data.hamaca.io'
+        host: HOST
     });
     this.redisClient.on("error", function (err) {
-        console.log("Redis Error: " + err);
+        throw "Redis Error: " + err;
     });
 };
 
