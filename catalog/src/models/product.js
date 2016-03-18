@@ -1,9 +1,5 @@
 var mandatoryFields  = ['title', 'price', 'sku', 'description'];
 
-const KEY_PREFIX = 'product';
-const KEY_SEPARATOR = ':';
-const NEXT_PRODUCT_ID = 'next_product_id';
-
 var Product = function (data) {
     this.data = data;
 };
