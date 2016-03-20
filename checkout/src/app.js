@@ -12,7 +12,9 @@ app.use(bodyParser.json());
 
 // Routes
 var indexRoutes = require('./routes/index');
+var checkoutRoutes = require('./routes/checkout');
 app.use('/', indexRoutes);
+app.use('/checkout', checkoutRoutes);
 
 // Start webserver
 app.listen(PORT);
