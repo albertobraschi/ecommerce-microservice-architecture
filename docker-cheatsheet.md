@@ -4,6 +4,17 @@ docker-machine rm default -y && \
     docker-machine create --driver virtualbox default
 ```
 
+# REMOVE ALL
+```
+docker stop dns && docker rm dns
+docker stop catalog && docker rm catalog
+docker stop catalog-data && docker rm catalog-data
+docker stop catalog-test && docker rm catalog-test
+docker stop checkout && docker rm checkout
+docker stop checkout-data && docker rm checkout-data
+docker stop checkout-test && docker rm checkout-test
+```
+
 # BUILD & RUN
 
 ## dns
@@ -40,6 +51,14 @@ docker build -t salvozappa/mocha ./catalog/test && \
     --rm salvozappa/mocha
 ```
 
+## checkout-data
+```
+docker run --name checkout-data \
+    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
+    --dns-search hamaca.io \
+    --rm redis
+```
+
 ## checkout
 ```
 docker build -t salvozappa/nodejs ./checkout/src && \
@@ -51,7 +70,7 @@ docker build -t salvozappa/nodejs ./checkout/src && \
 
 ## checkout-test
 ```
-docker build -t salvozappa/mocha ./checkout/test && \ 
+docker build -t salvozappa/mocha ./checkout/test && \
     docker run --name checkout-test \
     --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
     --dns-search hamaca.io \
