@@ -6,8 +6,8 @@ const CHECKOUT_ROUTE = '/checkout/';
 
 describe('hamaca checkout microservice', function () {
 
-    var orderId;
-    var order = [
+    var checkoutId;
+    var cart = [
         {
             id: 1,
             quantity: 10
@@ -39,12 +39,12 @@ describe('hamaca checkout microservice', function () {
 
     it('starts a checkout process', function (done) {
         superagent.post(HOST + CHECKOUT_ROUTE)
-            .send(order)
+            .send(cart)
             .end(function (err, res) {
                 expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(201);
-                orderId = res.body.id;
-                expect(orderId).to.be.a('number');
+                checkoutId = res.body.id;
+                expect(checkoutId).to.be.a('number');
                 done();
             });
     })

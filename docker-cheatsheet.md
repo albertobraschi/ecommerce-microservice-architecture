@@ -63,5 +63,5 @@ docker build -t salvozappa/mocha ./checkout/test && \
 docker run -it --rm \
     --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
     --dns-search hamaca.io \
-    ubuntu /bin/bash 
+    ubuntu /bin/bash
 ```
