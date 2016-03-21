@@ -18,6 +18,8 @@ describe('hamaca catalog microservice', function () {
         foo: 'bar' // invalid key, should be ignored
     };
 
+    var productsToLoad = [];
+
     var mandatoryFields  = ['title', 'price', 'sku', 'description'];
 
     it('is online', function (done) {
@@ -139,8 +141,32 @@ describe('hamaca catalog microservice', function () {
                 expect(res.body.products).to.be.an('object');
                 expect(res.body.products.length).to.be.lessThan(PAGE_SIZE+1);
                 expect(res.body.products[0]).to.be.an('object');
+                productsToLoad.push(res.body.products[0].id);
+                if (res.body.products.length > 1) {
+                    productsToLoad.push(res.body.products[1].id);
+                }
                 for (var i = 0; i < mandatoryFields.length; i++) {
                     expect(res.body.products[0][mandatoryFields[i]]).to.be.ok();
+                }
+                done();
+            });
+    });
+
+    it('loads multiple products', function (done) {
+        var productsQueryString = productsToLoad.join(';');
+        superagent
+            .get(HOST + PRODUCTS_ROUTE)
+            .query({
+                ids: productsQueryString
+            })
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body.length).to.be.lessThan(PAGE_SIZE+1);
+                expect(res.body[0]).to.be.an('object');
+                for (var i = 0; i < mandatoryFields.length; i++) {
+                    expect(res.body[0][mandatoryFields[i]]).to.be.ok();
                 }
                 done();
             });
