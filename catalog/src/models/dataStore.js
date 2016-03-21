@@ -75,7 +75,7 @@ DataStore.prototype.saveProduct = function (product, done) {
     }
 };
 
-DataStore.prototype.loadProduct = function (id, done, onlyData) {
+DataStore.prototype.loadProduct = function (id, done, dataOnly) {
     if (typeof id !== 'number') {
         throw "Invalid id or id not set";
     }
@@ -86,7 +86,7 @@ DataStore.prototype.loadProduct = function (id, done, onlyData) {
             data[key] = res[key];
         }
         data.enabled = data.enabled === 'true' // TODO add product data sanitizer
-        if (typeof onlyData !== 'undefined' && onlyData) {
+        if (typeof dataOnly !== 'undefined' && dataOnly) {
             done(data);
         } else {
             done(new Product(data));
@@ -94,20 +94,27 @@ DataStore.prototype.loadProduct = function (id, done, onlyData) {
     });
 };
 
+DataStore.prototype.loadMultipleProducts = function (ids, done, dataOnly) {
+    if ([].constructor === Array) {
+        throw "'ids' parameter must be an array";
+    }
+    var products = [];
+    for (var i = 0; i < ids.length; i++) {
+        this.loadProduct(parseInt(ids[i]), function (product) {
+            products.push(product);
+            if (products.length >= ids.length) {
+                done(products);
+            }
+        }.bind(this), true)
+    }
+};
+
 DataStore.prototype.loadPage = function (page, done, dataOnly) {
     startRange = (page - 1) * PAGE_SIZE;
     endRange = page * PAGE_SIZE - 1;
     this.redisClient.lrange(ACTIVE_PRODUCTS_LIST_KEY, startRange, endRange, function (err, res) {
         checkErr(err);
-        var products = [];
-        for (var i = 0; i < res.length; i++) {
-            this.loadProduct(parseInt(res[i]), function (product) {
-                products.push(product);
-                if (products.length >= res.length) {
-                    done(products);
-                }
-            }.bind(this), true)
-        }
+        this.loadMultipleProducts(res, done, dataOnly);
     }.bind(this));
 };
 
