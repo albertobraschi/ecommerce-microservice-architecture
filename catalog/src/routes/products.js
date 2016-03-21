@@ -76,16 +76,27 @@ router.patch('/:id', function (req, res) {
  */
 router.get('/', function (req, res) {
     var dataStore = new DataStore();
-    var page = parseInt(req.query.page);
-    dataStore.loadPage(page, function (products) {
-        res.status(200);
-        var response = {
-            page: page,
-            pages: 1,
-            products: products
-        };
-        res.json(response);
-    }, true);
+    if (typeof req.query.page !== 'undefined') {
+        var page = parseInt(req.query.page);
+        dataStore.loadPage(page, function (products) {
+            res.status(200);
+            var response = {
+                page: page,
+                pages: 1,
+                products: products
+            };
+            res.json(response);
+        }, true);
+    } else if (typeof req.query.ids !== 'undefined') {
+        var ids = req.query.ids.split(';');
+        dataStore.loadProducts(ids, function (products) {
+            res.status(200);
+            res.json(products);
+        }, true)
+    }
+    else {
+        res.sendStatus(400);
+    }
 });
 
 /*

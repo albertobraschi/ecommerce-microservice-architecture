@@ -94,7 +94,7 @@ DataStore.prototype.loadProduct = function (id, done, dataOnly) {
     });
 };
 
-DataStore.prototype.loadMultipleProducts = function (ids, done, dataOnly) {
+DataStore.prototype.loadProducts = function (ids, done, dataOnly) {
     if (typeof ids !== 'object') {
         throw "'ids' parameter not valid";
     }
@@ -114,7 +114,7 @@ DataStore.prototype.loadPage = function (page, done, dataOnly) {
     endRange = page * PAGE_SIZE - 1;
     this.redisClient.lrange(ACTIVE_PRODUCTS_LIST_KEY, startRange, endRange, function (err, res) {
         checkErr(err);
-        this.loadMultipleProducts(res, done, dataOnly);
+        this.loadProducts(res, done, dataOnly);
     }.bind(this));
 };
 
