@@ -49,5 +49,25 @@ describe('hamaca checkout microservice', function () {
                 expect(checkoutId).to.be.a('number');
                 done();
             });
-    })
+    });
+
+    it('doesn\'t start a checkout process if the cart is empty', function (done) {
+        superagent.post(HOST + CHECKOUT_ROUTE)
+            .send({
+                cart: []
+            })
+            .end(function (err, res) {
+                expect(res.statusCode).to.eql(400);
+                done();
+            });
+    });
+
+    it('doesn\'t start a checkout process if the cart is missing', function (done) {
+        superagent.post(HOST + CHECKOUT_ROUTE)
+            .send({})
+            .end(function (err, res) {
+                expect(res.statusCode).to.eql(400);
+                done();
+            });
+    });
 });
