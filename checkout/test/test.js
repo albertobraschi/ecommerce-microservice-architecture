@@ -13,7 +13,7 @@ describe('hamaca checkout microservice', function () {
             quantity: 10
         },
         {
-            id: 1,
+            id: 2,
             quantity: 5
         }
     ];
