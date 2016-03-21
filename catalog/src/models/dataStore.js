@@ -95,8 +95,8 @@ DataStore.prototype.loadProduct = function (id, done, dataOnly) {
 };
 
 DataStore.prototype.loadMultipleProducts = function (ids, done, dataOnly) {
-    if ([].constructor === Array) {
-        throw "'ids' parameter must be an array";
+    if (typeof ids !== 'object') {
+        throw "'ids' parameter not valid";
     }
     var products = [];
     for (var i = 0; i < ids.length; i++) {
