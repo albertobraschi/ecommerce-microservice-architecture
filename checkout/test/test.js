@@ -39,7 +39,9 @@ describe('hamaca checkout microservice', function () {
 
     it('starts a checkout process', function (done) {
         superagent.post(HOST + CHECKOUT_ROUTE)
-            .send(cart)
+            .send({
+                cart: cart
+            })
             .end(function (err, res) {
                 expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(201);
