@@ -35,7 +35,7 @@ DataStore.prototype._updateExistingProduct = function (product, done) {
                 done();
             }
         }.bind(this));
-}
+};
 
 DataStore.prototype._addNewProduct = function (product, done) {
     this.redisClient.incr(NEXT_PRODUCT_ID_KEY, function (err, res) {
@@ -50,11 +50,11 @@ DataStore.prototype._addNewProduct = function (product, done) {
                 done(productId);
             }.bind(this));
     }.bind(this));   
-}
+};
 
 DataStore.prototype.addActiveProduct = function (productId) {
     this.redisClient.rpush(ACTIVE_PRODUCTS_LIST_KEY, productId, checkErr);
-}
+};
 
 DataStore.prototype.removeActiveProduct = function (productId, done) {
     this.redisClient.lrem(ACTIVE_PRODUCTS_LIST_KEY, 1, productId, function (err, res) {
@@ -65,7 +65,7 @@ DataStore.prototype.removeActiveProduct = function (productId, done) {
         checkErr(err);
         done(productNotfound);
     });
-}
+};
 
 DataStore.prototype.saveProduct = function (product, done) {
     if (typeof product.data.id !== 'undefined') {
@@ -123,6 +123,6 @@ DataStore.prototype.getNumberOfProducts = function (done) {
         checkErr(err);
         done(res);
     });
-}
+};
 
 module.exports = DataStore;
