@@ -1,5 +1,5 @@
-var Checkout = function (data) {
-    this.data = data;
+var Checkout = function (cart) {
+    this.cart = cart;
 };
 
 Checkout.prototype.data = {};
