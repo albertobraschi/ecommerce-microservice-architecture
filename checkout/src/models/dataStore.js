@@ -63,11 +63,11 @@ DataStore.prototype.loadCheckout = function (id, done, dataOnly) {
         throw "Invalid id or id not set";
     }
     var checkoutKey = CHECKOUT_PREFIX + KEY_SEPARATOR + id;
-    this.redisClient.get(key, function (err, res) {
+    this.redisClient.get(checkoutKey, function (err, res) {
         checkErr(err);
         var checkout = stringToObject(res);
         if (typeof dataOnly !== 'undefined' && dataOnly) {
-            done(checkout.cart);
+            done(checkout);
         } else {
             done(new Checkout(checkout.cart));
         }

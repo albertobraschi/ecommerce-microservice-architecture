@@ -23,4 +23,19 @@ router.post('/', function (req, res) {
     }
 });
 
+/*
+ * Get an open checkout
+ */
+router.get('/:id', function (req, res) {
+    var dataStore = new DataStore();
+    var checkoutId = parseInt(req.params['id']);
+    if (isNaN(checkoutId)) {
+        throw 'Invalid id';
+    }
+    dataStore.loadCheckout(checkoutId, function (checkout) {
+        res.status(200);
+        res.json(checkout);
+    }, true);
+});
+
 module.exports = router;
