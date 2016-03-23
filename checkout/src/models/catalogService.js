@@ -8,9 +8,12 @@ var CatalogService = function (data) {
     this.data = data;
 };
 
-CatalogService.prototype.getProduct = function (productId, done) {
+CatalogService.prototype.getProduct = function (id, done) {
+    if (typeof id !== 'number') {
+        throw 'id parameter should be a number';
+    }
     superagent
-        .get(CATALOG_SERVICE_HOST + PRODUCTS_ROUTE + 1)
+        .get(CATALOG_SERVICE_HOST + PRODUCTS_ROUTE + id)
         .end(function (err, res) {
             if (res.statusCode == 200) {
                 done(res.body);

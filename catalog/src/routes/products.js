@@ -72,7 +72,7 @@ router.patch('/:id', function (req, res) {
 });
 
 /*
- * List the products
+ * Get multiple products
  */
 router.get('/', function (req, res) {
     var dataStore = new DataStore();
