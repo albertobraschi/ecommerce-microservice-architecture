@@ -23,4 +23,19 @@ CatalogService.prototype.getProduct = function (id, done) {
         });
 };
 
+CatalogService.prototype.getProducts = function (ids, done) {
+    superagent
+        .get(CATALOG_SERVICE_HOST + PRODUCTS_ROUTE)
+        .query({
+            ids: ids
+        })
+        .end(function (err, res) {
+            if (res.statusCode == 200) {
+                done(res.body);
+            } else {
+                throw 'Cannot fetch products';
+            }
+        });
+};
+
 module.exports = CatalogService;
