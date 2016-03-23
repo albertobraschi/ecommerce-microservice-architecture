@@ -13,6 +13,14 @@ router.post('/', function (req, res) {
     if (typeof cart !== 'object' || cart.length < 1) {
         res.sendStatus(400);
     }
+    else {
+        var dataStore = new DataStore();
+        var checkout = new Checkout(cart);
+        checkout.save(dataStore, function (checkoutId) {
+            res.status(201);
+            res.json({id: checkoutId});
+        });
+    }
 });
 
 module.exports = router;
