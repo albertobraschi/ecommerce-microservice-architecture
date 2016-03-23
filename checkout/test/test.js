@@ -70,4 +70,15 @@ describe('hamaca checkout microservice', function () {
                 done();
             });
     });
+
+    it('fetches a checkout', function (done) {
+        superagent
+            .get(HOST + CHECKOUT_ROUTE + checkoutId)
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(res.statusCode).to.eql(200);
+                expect(res.body.cart).to.be.an('object');
+                done();
+            });
+    });
 });
