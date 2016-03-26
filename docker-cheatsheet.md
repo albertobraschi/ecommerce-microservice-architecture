@@ -33,6 +33,14 @@ docker run --name catalog-data \
     --rm redis
 ```
 
+## checkout-data
+```
+docker run --name checkout-data \
+    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
+    --dns-search hamaca.io \
+    --rm redis
+```
+
 ## catalog
 ```
 docker build -t salvozappa/nodejs ./catalog/src && \
@@ -49,14 +57,6 @@ docker build -t salvozappa/mocha ./catalog/test && \
     --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
     --dns-search hamaca.io \
     --rm salvozappa/mocha
-```
-
-## checkout-data
-```
-docker run --name checkout-data \
-    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
-    --dns-search hamaca.io \
-    --rm redis
 ```
 
 ## checkout
