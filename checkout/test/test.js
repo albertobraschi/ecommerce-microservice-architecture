@@ -98,7 +98,10 @@ describe('hamaca checkout microservice', function () {
     it('accepts shipping data', function (done) {
         superagent
             .post(HOST + SHIPPING_ROUTE)
-            .send(shippingData)
+            .send({
+                'checkout-id': checkoutId,
+                'shipping': shippingData
+            })
             .end(function (err, res) {
                 expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(200);
