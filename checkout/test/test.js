@@ -38,7 +38,8 @@ describe('hamaca checkout microservice', function () {
     });
 
     it('starts a checkout process', function (done) {
-        superagent.post(HOST + CHECKOUT_ROUTE)
+        superagent
+            .post(HOST + CHECKOUT_ROUTE)
             .send({
                 cart: cart
             })
@@ -52,7 +53,8 @@ describe('hamaca checkout microservice', function () {
     });
 
     it('doesn\'t start a checkout process if the cart is empty', function (done) {
-        superagent.post(HOST + CHECKOUT_ROUTE)
+        superagent
+            .post(HOST + CHECKOUT_ROUTE)
             .send({
                 cart: []
             })
@@ -63,7 +65,8 @@ describe('hamaca checkout microservice', function () {
     });
 
     it('doesn\'t start a checkout process if the cart is missing', function (done) {
-        superagent.post(HOST + CHECKOUT_ROUTE)
+        superagent
+            .post(HOST + CHECKOUT_ROUTE)
             .send({})
             .end(function (err, res) {
                 expect(res.statusCode).to.eql(400);
