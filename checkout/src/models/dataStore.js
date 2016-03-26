@@ -1,4 +1,5 @@
 var Redis = require("redis");
+var Checkout = require('../models/checkout');
 
 const HOST = 'checkout-data.hamaca.io';
 
@@ -65,11 +66,16 @@ DataStore.prototype.loadCheckout = function (id, done, dataOnly) {
     var checkoutKey = CHECKOUT_PREFIX + KEY_SEPARATOR + id;
     this.redisClient.get(checkoutKey, function (err, res) {
         checkErr(err);
-        var checkout = stringToObject(res);
-        if (typeof dataOnly !== 'undefined' && dataOnly) {
-            done(checkout);
-        } else {
-            done(new Checkout(checkout.cart));
+        if (res === null) {
+            done(null);
+        }
+        else {
+            var checkout = stringToObject(res);
+            if (typeof dataOnly !== 'undefined' && dataOnly) {
+                done(checkout);
+            } else {
+                done(new Checkout(checkout.cart));
+            }
         }
     });
 };
