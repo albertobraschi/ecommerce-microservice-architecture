@@ -27,6 +27,8 @@ describe('hamaca checkout microservice', function () {
         'country': 'GBR' // ISO 3166-1 alpha-2
     };
 
+    var mandatoryFields  = Object.keys(shippingData);
+
     it('is online', function (done) {
         superagent
             .get(HOST)
@@ -115,6 +117,25 @@ describe('hamaca checkout microservice', function () {
                 expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(200);
                 expect(res.body.shipping).to.eql(shippingData);
+                done();
+            });
+    });
+
+    it('doesn\'t accept incomplete shipping data', function (done) {
+        var fieldToExclude = Math.floor((Math.random() * mandatoryFields.length));
+        var brokenShipping = {};
+        for (var i = 0; i < mandatoryFields.length; i++) {
+            if (i !== fieldToExclude) {
+                brokenShipping[mandatoryFields[i]] = shippingData[mandatoryFields[i]];
+            }
+        }
+        superagent.post(HOST + SHIPPING_ROUTE)
+            .send({
+                'checkout-id': checkoutId,
+                'shipping': brokenShipping
+            })
+            .end(function (e, res) {
+                expect(res.statusCode).to.eql(400);
                 done();
             });
     });
