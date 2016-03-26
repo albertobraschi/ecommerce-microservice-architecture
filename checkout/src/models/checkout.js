@@ -14,8 +14,4 @@ Checkout.prototype.save = function (dataStore, done) {
     return dataStore.saveCheckout(this, done);
 };
 
-Checkout.prototype.setShipping = function (shipping) {
-    this.shipping = shipping;
-}
-
 module.exports = Checkout;

@@ -17,7 +17,7 @@ var CatalogService = require('../models/catalogService');
     }
     else {
         var checkout = dataStore.loadCheckout(checkoutId, function (checkout) {
-            checkout.setShipping(shippingData);
+            checkout.shipping = shippingData;
             checkout.save(dataStore, function () {
                 res.sendStatus(200);
             });
