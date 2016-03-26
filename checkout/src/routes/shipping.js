@@ -18,9 +18,14 @@ var CatalogService = require('../models/catalogService');
     else {
         var checkout = dataStore.loadCheckout(checkoutId, function (checkout) {
             checkout.shipping = shippingData;
-            checkout.save(dataStore, function () {
-                res.sendStatus(200);
-            });
+            if (checkout.validate()) {
+                checkout.save(dataStore, function () {
+                    res.sendStatus(200);
+                });
+            } else {
+                res.status(400);
+                res.send('Error: Invalid checkout data');
+            }
         });
     }
 });
