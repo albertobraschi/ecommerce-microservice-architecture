@@ -13,8 +13,10 @@ app.use(bodyParser.json());
 // Routes
 var indexRoutes = require('./routes/index');
 var checkoutRoutes = require('./routes/checkout');
+var shippingRoutes = require('./routes/shipping');
 app.use('/', indexRoutes);
 app.use('/checkout', checkoutRoutes);
+app.use('/shipping', shippingRoutes);
 
 // Start webserver
 app.listen(PORT);
