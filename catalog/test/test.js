@@ -10,12 +10,12 @@ describe('hamaca catalog microservice', function () {
 
     var id;
     var newProductData = {
-        title: 'Egg Chair',
-        price: 666,
-        sku: 'CHA-01',
-        description: 'The Egg is a chair designed by Arne Jacobsen in 1958 for the Radisson SAS hotel in Copenhagen, ' +
+        'title': 'Egg Chair',
+        'price': 666,
+        'sku': 'CHA-01',
+        'description': 'The Egg is a chair designed by Arne Jacobsen in 1958 for the Radisson SAS hotel in Copenhagen, ' +
         'Denmark. It is manufactured by Republic of Fritz Hansen.',
-        foo: 'bar' // invalid key, should be ignored
+        'foo': 'bar' // invalid key, should be ignored
     };
 
     var productsToLoad = [];
