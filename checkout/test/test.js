@@ -3,6 +3,7 @@ var expect = require('expect.js');
 
 const HOST = 'http://checkout.hamaca.io:8080';
 const CHECKOUT_ROUTE = '/checkout/';
+const SHIPPING_ROUTE = '/shipping/';
 
 describe('hamaca checkout microservice', function () {
 
@@ -17,6 +18,15 @@ describe('hamaca checkout microservice', function () {
             quantity: 5
         }
     ];
+
+    var shippingData = {
+        'id': checkoutId,
+        'full-name': 'Francis Urquhart',
+        'address': '10 Downing St',
+        'city': 'London',
+        'postcode': 'SW1A 2AA',
+        'country': 'GBR' // ISO 3166-1 alpha-2
+    };
 
     it('is online', function (done) {
         superagent
@@ -81,6 +91,17 @@ describe('hamaca checkout microservice', function () {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
                 expect(res.body.cart).to.eql(cart);
+                done();
+            });
+    });
+
+    it('accepts shipping data', function (done) {
+        superagent
+            .post(HOST + SHIPPING_ROUTE)
+            .send(shippingData)
+            .end(function (err, res) {
+                expect(err).to.eql(null);
+                expect(res.statusCode).to.eql(200);
                 done();
             });
     });
