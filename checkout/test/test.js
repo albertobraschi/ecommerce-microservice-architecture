@@ -77,7 +77,7 @@ describe('hamaca checkout microservice', function () {
             .end(function (e, res) {
                 expect(e).to.eql(null);
                 expect(res.statusCode).to.eql(200);
-                expect(res.body.cart).to.be.an('object');
+                expect(res.body.cart).to.eql(cart);
                 done();
             });
     });
