@@ -1,5 +1,5 @@
-var Product = require('../models/product');
 var Redis = require("redis");
+var Product = require('../models/product');
 
 const HOST = 'catalog-data.hamaca.io';
 
@@ -81,15 +81,21 @@ DataStore.prototype.loadProduct = function (id, done, dataOnly) {
     }
     var key = PRODUCT_PREFIX + KEY_SEPARATOR + id;
     this.redisClient.hgetall(key, function (err, res) {
-        var data = {};
-        for (var key in res) {
-            data[key] = res[key];
+        checkErr(err);
+        if (res === null) {
+            done(null);
         }
-        data.enabled = data.enabled === 'true' // TODO add product data sanitizer
-        if (typeof dataOnly !== 'undefined' && dataOnly) {
-            done(data);
-        } else {
-            done(new Product(data));
+        else {
+            var data = {};
+            for (var key in res) {
+                data[key] = res[key];
+            }
+            data.enabled = data.enabled === 'true' // TODO add product data sanitizer
+            if (typeof dataOnly !== 'undefined' && dataOnly) {
+                done(data);
+            } else {
+                done(new Product(data));
+            }
         }
     });
 };
