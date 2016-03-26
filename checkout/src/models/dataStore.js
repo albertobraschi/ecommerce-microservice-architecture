@@ -74,7 +74,9 @@ DataStore.prototype.loadCheckout = function (id, done, dataOnly) {
             if (typeof dataOnly !== 'undefined' && dataOnly) {
                 done(checkout);
             } else {
-                done(new Checkout(checkout.cart));
+                checkout = new Checkout(checkout.cart);
+                checkout.id = id;
+                done(checkout);
             }
         }
     });
