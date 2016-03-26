@@ -20,7 +20,6 @@ describe('hamaca checkout microservice', function () {
     ];
 
     var shippingData = {
-        'id': checkoutId,
         'full-name': 'Francis Urquhart',
         'address': '10 Downing St',
         'city': 'London',
@@ -87,8 +86,8 @@ describe('hamaca checkout microservice', function () {
     it('fetches a checkout', function (done) {
         superagent
             .get(HOST + CHECKOUT_ROUTE + checkoutId)
-            .end(function (e, res) {
-                expect(e).to.eql(null);
+            .end(function (err, res) {
+                expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(200);
                 expect(res.body.cart).to.eql(cart);
                 done();
@@ -105,6 +104,17 @@ describe('hamaca checkout microservice', function () {
             .end(function (err, res) {
                 expect(err).to.eql(null);
                 expect(res.statusCode).to.eql(200);
+                done();
+            });
+    });
+
+    it('correctly saves and fetches shipping data', function (done) {
+        superagent
+            .get(HOST + CHECKOUT_ROUTE + checkoutId)
+            .end(function (err, res) {
+                expect(err).to.eql(null);
+                expect(res.statusCode).to.eql(200);
+                expect(res.body.shipping).to.eql(shippingData);
                 done();
             });
     });
