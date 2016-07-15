@@ -1,7 +1,7 @@
 var superagent = require('superagent');
 var expect = require('expect.js');
 
-const HOST = 'http://checkout.hamaca.io:8080';
+const HOST = 'http://checkout.microcommerce.test:8080';
 const CHECKOUT_ROUTE = '/checkout/';
 const SHIPPING_ROUTE = '/shipping/';
 

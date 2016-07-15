@@ -1,7 +1,7 @@
 var Redis = require("redis");
 var Product = require('../models/product');
 
-const HOST = 'catalog-data.hamaca.io';
+const HOST = 'catalog-data.microcommerce.test';
 
 const KEY_SEPARATOR = ':';
 const PRODUCT_PREFIX = 'product';

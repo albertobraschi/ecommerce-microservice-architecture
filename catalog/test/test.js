@@ -1,7 +1,7 @@
 var superagent = require('superagent');
 var expect = require('expect.js');
 
-const HOST = 'http://catalog.hamaca.io:8080';
+const HOST = 'http://catalog.microcommerce.test:8080';
 const PRODUCTS_ROUTE = '/products/';
 
 const PAGE_SIZE = 10;

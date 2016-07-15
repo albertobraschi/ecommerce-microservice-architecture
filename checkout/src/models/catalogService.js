@@ -1,7 +1,7 @@
 var superagent = require('superagent');
 
 // TODO move these to a configuration service
-const CATALOG_SERVICE_HOST = 'http://catalog.hamaca.io:8080';
+const CATALOG_SERVICE_HOST = 'http://catalog.microcommerce.test:8080';
 const PRODUCTS_ROUTE = '/products/';
 
 var CatalogService = function (data) {

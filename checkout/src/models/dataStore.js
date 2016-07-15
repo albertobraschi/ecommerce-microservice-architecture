@@ -1,7 +1,7 @@
 var Redis = require("redis");
 var Checkout = require('../models/checkout');
 
-const HOST = 'checkout-data.hamaca.io';
+const HOST = 'checkout-data.microcommerce.test';
 
 const KEY_SEPARATOR = ':';
 const CHECKOUT_PREFIX = 'checkout'
