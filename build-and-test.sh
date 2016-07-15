@@ -18,11 +18,19 @@ docker run --name catalog-data \
 
 echo -e '\033[0;32mBuild and run catalog service... \033[0m'
 ## run catalog
-docker build -t salvozappa/nodejs ./catalog/src && docker run --name catalog -p 8080:8080    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search microcommerce.test     -iPd salvozappa/nodejs
+docker build -t salvozappa/nodejs ./catalog/src && \
+    docker run --name catalog -p 8080:8080  \
+    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
+    --dns-search microcommerce.test \
+    -iPd salvozappa/nodejs
 
 echo -e '\033[0;32mRun tests... \033[0m'
 ## run catalog-test
-docker build -t salvozappa/mocha ./catalog/test && docker run --name catalog-test   --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns)     --dns-search microcommerce.test     -iP salvozappa/mocha
+docker build -t salvozappa/mocha ./catalog/test && \
+    docker run --name catalog-test \
+    --dns $(docker inspect -f '{{.NetworkSettings.IPAddress}}' dns) \
+    --dns-search microcommerce.test \
+    -iP salvozappa/mocha
 
 echo -e '\033[0;32mStopping all containers... \033[0m'
 docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
