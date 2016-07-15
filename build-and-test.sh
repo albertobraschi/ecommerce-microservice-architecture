@@ -1,7 +1,4 @@
 ## remove all docker containers
-echo -e '\033[0;32mStopping all containers... \033[0m'
-docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
-
 echo -e '\033[0;32mStart dns... \033[0m'
 ## run catalog
 docker run --name dns \
@@ -32,5 +29,10 @@ docker build -t salvozappa/mocha ./catalog/test && \
     --dns-search microcommerce.test \
     -iP salvozappa/mocha
 
-echo -e '\033[0;32mStopping all containers... \033[0m'
-docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+echo -e '\033[0;32mStopping and removing all containers... \033[0m'
+docker stop dns && docker rm dns
+docker stop catalog && docker rm catalog
+docker stop catalog-data && docker rm catalog-data
+docker stop catalog-test && docker rm catalog-test
+
+echo -e '\033[0;32mDone! \033[0m'
